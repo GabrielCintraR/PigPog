@@ -17,7 +17,6 @@ function PongGame(canvas) {
     var paddle1Y = 250, paddle2Y = 250;
     var showingWinScreen = false;
 
-    // analytics
     var startTime = new Date().getTime();
     var totalFramesRendered = 0;
     var avgFrameRate = 0;
@@ -25,7 +24,6 @@ function PongGame(canvas) {
     setInterval(function () {
         moveEverything();
         drawEverything();
-        // analytics
         totalFramesRendered ++;
         avgFrameRate = Math.round(totalFramesRendered / ((new Date().getTime() - startTime) / 1000) * 10) / 10.0;
         canvasContext.font = "10px Arial";
@@ -59,9 +57,6 @@ function PongGame(canvas) {
         paddle1Y = mousePos.y - (PADDLE_HEIGHT / 2);
     }
 
-    /**
-     * Restart the ball from the center of the screen
-     */
     function ballReset() {
         if (player1Score >= WINNING_SCORE ||
                 player2Score >= WINNING_SCORE) {
@@ -73,9 +68,6 @@ function PongGame(canvas) {
         ballY = canvas.height / 2;
     }
 
-    /**
-     * Move the computer player's paddle
-     */
     function computerMovement() {
         var paddle2YCenter = paddle2Y + (PADDLE_HEIGHT / 2);
         if (paddle2YCenter < ballY - 35) {
@@ -97,37 +89,31 @@ function PongGame(canvas) {
         if (ballX < PADDLE_THICKNESS &&
                 ballY > paddle1Y &&
                 ballY < paddle1Y + PADDLE_HEIGHT) {
-            // hit the left paddle
             ballSpeedX = -ballSpeedX;
 
             var deltaY = ballY - (paddle1Y + PADDLE_HEIGHT / 2);
             ballSpeedY = deltaY * 0.35 * FRAME_RATE_ADJUST;
         } else if (ballX < 0){
-            // went off
-            player2Score++; // must be BEFORE ballReset()
+            player2Score++;
             ballReset();
         }
         
         if (ballX > canvas.width - PADDLE_THICKNESS &&
                 ballY > paddle2Y &&
                 ballY < paddle2Y + PADDLE_HEIGHT) {
-            // hit the right paddle
             ballSpeedX = -ballSpeedX;
 
             var deltaY = ballY - (paddle2Y + PADDLE_HEIGHT / 2);
             ballSpeedY = deltaY * 0.35 * FRAME_RATE_ADJUST;
         } else if (ballX > canvas.width) {
-            // went off
-            player1Score++; // must be BEFORE ballReset()
+            player1Score++;
             ballReset();
         }
 
         if (ballY < 0) {
-            // hit the top wall
             ballSpeedY = -ballSpeedY;
         }
         if (ballY > canvas.height) {
-            // hit the bottom wall
             ballSpeedY = -ballSpeedY;
         }
     }
@@ -139,7 +125,6 @@ function PongGame(canvas) {
     }
 
     function drawEverything() {
-        // next line blanks out the screen with black
         colorRect(0, 0, canvas.width, canvas.height, 'black');
 
         if (showingWinScreen) {
@@ -157,13 +142,10 @@ function PongGame(canvas) {
 
         drawNet();
 
-        // this is left player paddle
         colorRect(0, paddle1Y, PADDLE_THICKNESS, PADDLE_HEIGHT, 'white');
 
-        // this is right computer paddle
         colorRect(canvas.width - PADDLE_THICKNESS, paddle2Y, PADDLE_THICKNESS, PADDLE_HEIGHT, 'white');
 
-        // next line draws the ball
         colorCircle(ballX, ballY, 10, 'white');
 
         canvasContext.font = "20px Arial";
